@@ -1,0 +1,6 @@
+image_name,plate_number,plate_type,confidence,plate_text
+111112.jpg,1,hsrp,0.87,MH40CL2013
+111112.jpg,2,hsrp,0.64,MH31FW8606
+111111.jpg,1,hsrp,0.85,MH31FW8606
+111114.jpg,1,hsrp,0.88,MH29BT2178
+111117.jpg,1,hsrp,0.89,MH31FZ4258
