@@ -48,6 +48,34 @@ processed_frame = None  # Most recent processed frame
 detection_data = []  # Store detection data
 output_dir = os.path.join(current_dir, "detected_plates")  # Directory to save detections
 
+def init_mobile_camera(camera_id=0):
+    """Initialize camera with mobile-specific settings"""
+    try:
+        # Try different camera backends
+        backends = [cv2.CAP_ANY, cv2.CAP_V4L2, cv2.CAP_V4L]
+        cap = None
+        
+        for backend in backends:
+            try:
+                cap = cv2.VideoCapture(camera_id + backend)
+                if cap is not None and cap.isOpened():
+                    # Set mobile-friendly camera properties
+                    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+                    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+                    cap.set(cv2.CAP_PROP_FPS, 30)
+                    cap.set(cv2.CAP_PROP_AUTOFOCUS, 1)
+                    return cap
+            except Exception:
+                continue
+                
+        if cap is None or not cap.isOpened():
+            st.error("Could not initialize camera. Please check camera permissions and connection.")
+            return None
+            
+    except Exception as e:
+        st.error(f"Error initializing mobile camera: {str(e)}")
+        return None
+
 def webcam_thread(camera_id, width, height):
     """Thread to continuously read frames from webcam"""
     # Initialize webcam with retry mechanism
@@ -57,9 +85,16 @@ def webcam_thread(camera_id, width, height):
     
     while retry_count < max_retries:
         try:
+            # Try mobile-specific camera initialization first
+            cap = init_mobile_camera(camera_id)
+            if cap is not None and cap.isOpened():
+                break
+                
+            # Fall back to regular initialization if mobile init fails
             cap = init_webcam(camera_id, width, height)
             if cap is not None and cap.isOpened():
                 break
+                
             retry_count += 1
             time.sleep(1)  # Wait before retrying
         except Exception as e:
@@ -77,8 +112,11 @@ def webcam_thread(camera_id, width, height):
             if not ret:
                 st.warning("Failed to read frame from camera. Attempting to reconnect...")
                 cap.release()
-                cap = init_webcam(camera_id, width, height)
-                if not cap.isOpened():
+                # Try to reinitialize with mobile settings
+                cap = init_mobile_camera(camera_id)
+                if not cap or not cap.isOpened():
+                    cap = init_webcam(camera_id, width, height)
+                if not cap or not cap.isOpened():
                     st.error("Could not reconnect to camera")
                     break
                 continue
