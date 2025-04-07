@@ -1,54 +1,77 @@
-# License Plate Detector with Gemini OCR
+# License Plate Detection with Webcam
 
-This project detects license plates in images and extracts the text using Gemini AI OCR.
+This application uses computer vision and OCR to detect and recognize license plates in real-time using your webcam.
 
 ## Features
 
-- Detect license plates in images using YOLO
-- Extract text from license plates using Google's Gemini AI Vision model
-- Save detection results including plate text to CSV
-- Display and save annotated images
+- Real-time license plate detection using YOLOv8
+- OCR text extraction from license plates using Google's Gemini AI
+- Two modes: command-line webcam application and Streamlit web interface
+- Detection history and statistics
+- Save detected license plates for later analysis
 
 ## Setup
 
 1. Install the required packages:
    ```
-   pip install ultralytics opencv-python google-generativeai pillow
+   pip install -r requirements.txt
    ```
 
-2. Get a Gemini API key from [Google AI Studio](https://aistudio.google.com/app/apikey)
+2. Make sure you have a trained YOLOv8 model (best.pt) in this directory or in the parent directory.
+
+3. Get a Gemini API key from [Google AI Studio](https://aistudio.google.com/app/apikey)
 
 ## Usage
 
-### Process custom images with OCR
+### Command-line Webcam Application
 
-Run the batch file:
+1. Edit the `run_webcam.bat` file to include your Gemini API key.
+2. Run the batch file:
+   ```
+   run_webcam.bat
+   ```
+3. Controls while running:
+   - Press 'q' to quit
+   - Press 's' to save the current frame
+   - Press 'p' to toggle automatic plate saving
+
+### Streamlit Web Application
+
+1. Run the web application:
+   ```
+   run_streamlit.bat
+   ```
+   or manually:
+   ```
+   streamlit run app.py
+   ```
+
+2. Open your browser at http://localhost:8501
+3. Configure settings in the sidebar
+4. Click "Start Detection" to begin webcam feed
+5. Detected license plates will be displayed and saved (if enabled)
+
+## Output
+
+All detected plates and history are saved in the `detected_plates` directory:
+- License plate images with timestamps and detection information
+- A CSV file with all detection records
+
+## Command Line Options
+
+The webcam detector supports several command-line options:
+
 ```
-process_custom_image_with_ocr.bat
+python webcam_detector.py --help
 ```
 
-Or run the Python script directly:
-```
-python process_custom_image.py
-```
-
-When prompted:
-1. Select a model to use for detection
-2. Choose whether to use Gemini AI for OCR
-3. Enter your Gemini API key (or set it as an environment variable named `GEMINI_API_KEY`)
-4. Select an image to process
-5. View the detected license plates and extracted text
-
-### Results
-
-Detection results are saved in the `custom_results` directory:
-- Annotated images with detection boxes and OCR text
-- Individual cropped license plate images 
-- `plate_detections.csv` with all detected license plates and their extracted text
-
-## Environment Variable
-
-To avoid entering your API key each time, you can set it as an environment variable:
-
-1. Windows: `setx GEMINI_API_KEY "your-api-key-here"`
-2. Linux/Mac: `export GEMINI_API_KEY="your-api-key-here"` 
+Options include:
+- `--model`: Path to YOLOv8 model
+- `--camera`: Camera index (default: 0)
+- `--width`: Camera width (default: 1280)
+- `--height`: Camera height (default: 720)
+- `--conf`: Confidence threshold (default: 0.5)
+- `--device`: Device to use ('0' for GPU, 'cpu' for CPU)
+- `--save`: Save detected plates
+- `--gemini-key`: Gemini API key for OCR
+- `--output-dir`: Output directory for detections 
