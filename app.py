@@ -104,32 +104,23 @@ def main():
                 margin: 0.25rem 0;
                 height: 3rem;
                 font-size: 1.1rem;
-                border-radius: 8px;
-                font-weight: 500;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             }
             .stImage {
                 max-width: 100%;
                 height: auto;
-                border-radius: 8px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             }
             .stDataFrame {
                 font-size: 0.8rem;
                 width: 100%;
                 overflow-x: auto;
-                border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             }
             .stTextInput>div>div>input {
                 font-size: 1rem;
                 height: 2.5rem;
-                border-radius: 8px;
             }
             .stSelectbox>div>div>select {
                 font-size: 1rem;
                 height: 2.5rem;
-                border-radius: 8px;
             }
             .stSlider>div>div>div {
                 height: 2.5rem;
@@ -143,27 +134,11 @@ def main():
             }
             .stExpander {
                 margin-bottom: 1rem;
-                border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             }
             .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
                 font-size: 1.5rem;
                 margin-top: 0.5rem;
                 margin-bottom: 0.5rem;
-            }
-            .stTabs [data-baseweb="tab-list"] {
-                gap: 1px;
-            }
-            .stTabs [data-baseweb="tab"] {
-                height: 3rem;
-                white-space: pre-wrap;
-                background-color: #f8f8f8;
-                border-radius: 8px 8px 0 0;
-                font-weight: 500;
-            }
-            .stTabs [aria-selected="true"] {
-                background-color: #4CAF50 !important;
-                color: white !important;
             }
         }
         
@@ -176,7 +151,6 @@ def main():
         .stAlert {
             margin: 0.5rem 0;
             padding: 0.75rem;
-            border-radius: 8px;
         }
         
         /* Better spacing for mobile */
@@ -189,7 +163,6 @@ def main():
             max-width: 100%;
             height: auto;
             object-fit: contain;
-            border-radius: 8px;
         }
         
         /* Improve table readability on mobile */
@@ -202,103 +175,60 @@ def main():
         [data-testid="stCamera"] {
             width: 100% !important;
             margin: 0 auto;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
         }
         
         [data-testid="stCamera"] > div {
             width: 100% !important;
-            border-radius: 8px;
-            overflow: hidden;
         }
         
         [data-testid="stCamera"] video {
             width: 100% !important;
             height: auto !important;
-            border-radius: 8px;
         }
         
-        /* Custom styling for camera button */
-        button.uploadButton {
+        /* Enhance camera button specifically */
+        [data-testid="stCamera"] button {
             background-color: #4CAF50 !important;
             color: white !important;
-            border-radius: 8px !important;
-            font-weight: bold !important;
-            font-size: 1.1rem !important;
-            padding: 0.5rem 1rem !important;
-            box-shadow: 0 3px 5px rgba(0,0,0,0.2) !important;
-            border: none !important;
+            border-radius: 50% !important;
+            width: 60px !important;
+            height: 60px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2) !important;
+            border: 3px solid white !important;
+            position: relative !important;
+            bottom: 10px !important;
+            margin: 0 auto !important;
+            transition: all 0.2s ease !important;
         }
         
-        /* Custom styles for the tab content */
-        .stTabs [data-baseweb="tab-panel"] {
-            background-color: white;
-            border-radius: 0 0 8px 8px;
-            padding: 1rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        [data-testid="stCamera"] button:hover {
+            background-color: #45a049 !important;
+            transform: scale(1.05) !important;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3) !important;
         }
         
-        /* Custom app header */
-        .app-header {
-            background: linear-gradient(90deg, #1E88E5 0%, #1565C0 100%);
-            color: white;
-            padding: 1rem;
-            margin: -1rem -1rem 1rem -1rem;
-            border-radius: 0 0 12px 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            text-align: center;
+        [data-testid="stCamera"] button:active {
+            transform: scale(0.95) !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
         }
         
-        /* Success message styling */
-        .stSuccess {
-            background-color: #d4edda !important;
-            color: #155724 !important;
-            border-radius: 8px !important;
-            border: 1px solid #c3e6cb !important;
-            padding: 0.75rem 1.25rem !important;
-            font-weight: 500 !important;
+        /* Add camera icon to button */
+        [data-testid="stCamera"] button::before {
+            content: "📸" !important;
+            font-size: 24px !important;
         }
         
-        /* Warning message styling */
-        .stWarning {
-            background-color: #fff3cd !important;
-            color: #856404 !important;
-            border-radius: 8px !important;
-            border: 1px solid #ffeeba !important;
-            padding: 0.75rem 1.25rem !important;
-            font-weight: 500 !important;
-        }
-        
-        /* Error message styling */
-        .stError {
-            background-color: #f8d7da !important;
-            color: #721c24 !important;
-            border-radius: 8px !important;
-            border: 1px solid #f5c6cb !important;
-            padding: 0.75rem 1.25rem !important;
-            font-weight: 500 !important;
-        }
-        
-        /* Info message styling */
-        .stInfo {
-            background-color: #e7f2fa !important;
-            color: #0c5460 !important;
-            border-radius: 8px !important;
-            border: 1px solid #d1ecf1 !important;
-            padding: 0.75rem 1.25rem !important;
-            font-weight: 500 !important;
+        /* Hide default text in camera button */
+        [data-testid="stCamera"] button span {
+            display: none !important;
         }
         </style>
     """, unsafe_allow_html=True)
     
-    # Custom header with better styling
-    st.markdown("""
-        <div class="app-header">
-            <h1>📷 License Plate Detection</h1>
-            <p>Snap a photo or upload an image to detect license plates</p>
-        </div>
-    """, unsafe_allow_html=True)
+    st.title("License Plate Detection System")
     
     # Initialize session state variables
     if 'detector' not in st.session_state:
@@ -315,7 +245,7 @@ def main():
         st.session_state['detection_results'] = []
     
     # Move settings to an expander for mobile
-    with st.expander("⚙️ Settings", expanded=False):
+    with st.expander("Settings", expanded=False):
         # Create output directory
         os.makedirs(output_dir, exist_ok=True)
             
@@ -390,37 +320,20 @@ def main():
         </style>
     """, unsafe_allow_html=True)
     
-    # Show instructions for mobile users with improved styling
-    st.markdown("""
-        <div style="background-color: #e7f2fa; border-left: 5px solid #1976D2; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
-            <h3 style="margin-top: 0; color: #1976D2;">📱 Mobile Camera Usage</h3>
-            <ol style="margin-bottom: 0; padding-left: 1.5rem;">
-                <li>Grant camera permissions when prompted</li>
-                <li>Take a photo of a license plate</li>
-                <li>The system will analyze and show results</li>
-            </ol>
-        </div>
-    """, unsafe_allow_html=True)
+    # Show instructions for mobile users
+    st.info("""
+        📱 **Mobile Camera Usage:**
+        1. Grant camera permissions when prompted
+        2. Take a photo or upload an existing one
+        3. The system will analyze the image for license plates
+    """)
     
-    # Use Streamlit's native camera input for mobile compatibility with improved styling
-    camera_tab, upload_tab = st.tabs(["📷 Camera", "📤 Upload"])
+    # Use Streamlit's native camera input for mobile compatibility
+    camera_tab, upload_tab = st.tabs(["Camera", "Upload Image"])
     
     with camera_tab:
-        # Custom styled camera label
-        st.markdown("""
-            <h3 style="margin-top: 0.5rem; margin-bottom: 0.5rem; color: #2E7D32;">Take a photo of a license plate</h3>
-        """, unsafe_allow_html=True)
-        
         # Use Streamlit's camera input component which works better on mobile
-        camera_image = st.camera_input("", key="license_plate_camera")
-        
-        # Add a styled note
-        if not camera_image:
-            st.markdown("""
-                <div style="text-align: center; margin-top: 1rem; color: #616161; font-style: italic;">
-                    Tap the camera button above to take a photo
-                </div>
-            """, unsafe_allow_html=True)
+        camera_image = st.camera_input("Take a photo of a license plate", key="license_plate_camera")
         
         if camera_image is not None:
             # Process the camera image if detector is available
@@ -472,21 +385,8 @@ def main():
                     st.error(f"Error processing camera image: {str(e)}")
     
     with upload_tab:
-        # Custom styled upload label
-        st.markdown("""
-            <h3 style="margin-top: 0.5rem; margin-bottom: 0.5rem; color: #2E7D32;">Upload an image with license plates</h3>
-        """, unsafe_allow_html=True)
-        
         # Allow upload of images for processing
-        uploaded_image = st.file_uploader("", type=["jpg", "jpeg", "png"])
-        
-        # Add a styled note
-        if not uploaded_image:
-            st.markdown("""
-                <div style="text-align: center; margin-top: 1rem; color: #616161; font-style: italic;">
-                    Tap the browse files button above to upload an image
-                </div>
-            """, unsafe_allow_html=True)
+        uploaded_image = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
         
         if uploaded_image is not None:
             # Process the uploaded image if detector is available
@@ -537,15 +437,11 @@ def main():
                 except Exception as e:
                     st.error(f"Error processing uploaded image: {str(e)}")
     
-    # Display saved detections with better styling
-    if os.path.exists(output_dir) and any(Path(output_dir).glob("*.jpg")):
-        st.markdown("""
-            <h2 style="margin-top: 2rem; margin-bottom: 1rem; color: #1976D2; border-bottom: 2px solid #e0e0e0; padding-bottom: 0.5rem;">
-                📋 Saved Detections
-            </h2>
-        """, unsafe_allow_html=True)
-        
-        # Check for detected_plates directory and files
+    # Display saved detections
+    st.subheader("Saved Detections")
+    
+    # Check for detected_plates directory and files
+    if os.path.exists(output_dir):
         plate_images = list(Path(output_dir).glob("*.jpg"))
         plate_images = [p for p in plate_images if "frame_" not in p.name]  # Exclude full frames
         
@@ -559,25 +455,38 @@ def main():
                     st.image(str(img_path), caption=img_path.name, use_column_width=True)
         else:
             st.info("No saved detections found.")
+    else:
+        st.info("No detection directory found.")
     
     # Display detection history from CSV if available
     csv_path = os.path.join(output_dir, "detection_history.csv")
     if os.path.exists(csv_path):
-        with st.expander("Detection Records", expanded=False):
-            try:
-                df = pd.read_csv(csv_path)
-                st.dataframe(df, use_container_width=True)
-                
-                # Download button for CSV
-                csv_data = df.to_csv(index=False)
-                st.download_button(
-                    label="Download Detection Data",
-                    data=csv_data,
-                    file_name="license_plate_detections.csv",
-                    mime="text/csv"
-                )
-            except Exception as e:
-                st.error(f"Error loading detection history: {e}")
+        st.subheader("Detection Records")
+        try:
+            df = pd.read_csv(csv_path)
+            st.dataframe(df, use_container_width=True)
+            
+            # Download button for CSV
+            csv_data = df.to_csv(index=False)
+            st.download_button(
+                label="Download Detection Data",
+                data=csv_data,
+                file_name="license_plate_detections.csv",
+                mime="text/csv"
+            )
+        except Exception as e:
+            st.error(f"Error loading detection history: {e}")
+    
+    # Add Clear Cache button at the bottom
+    st.markdown("---")
+    if st.button("Clear Cache", use_container_width=True):
+        # Clear session state
+        for key in list(st.session_state.keys()):
+            del st.session_state[key]
+        # Clear cache
+        st.cache_data.clear()
+        st.cache_resource.clear()
+        st.rerun()
 
 if __name__ == "__main__":
     main() 
