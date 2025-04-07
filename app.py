@@ -65,6 +65,9 @@ def webcam_thread(camera_id, width, height):
                     break
                 continue
                 
+            # Resize frame for mobile optimization
+            frame = cv2.resize(frame, (width, height))
+                
             # If queue is full, remove oldest frame
             if frame_queue.full():
                 try:
@@ -107,13 +110,16 @@ def main():
     # Add custom CSS for mobile responsiveness
     st.markdown("""
         <style>
+        /* Mobile-first responsive design */
         @media (max-width: 768px) {
             .stApp {
-                padding: 1rem;
+                padding: 0.5rem;
             }
             .stButton>button {
                 width: 100%;
-                margin: 0.5rem 0;
+                margin: 0.25rem 0;
+                height: 3rem;
+                font-size: 1.1rem;
             }
             .stImage {
                 max-width: 100%;
@@ -121,7 +127,64 @@ def main():
             }
             .stDataFrame {
                 font-size: 0.8rem;
+                width: 100%;
+                overflow-x: auto;
             }
+            .stTextInput>div>div>input {
+                font-size: 1rem;
+                height: 2.5rem;
+            }
+            .stSelectbox>div>div>select {
+                font-size: 1rem;
+                height: 2.5rem;
+            }
+            .stSlider>div>div>div {
+                height: 2.5rem;
+            }
+            .stCheckbox>div>label {
+                font-size: 1rem;
+            }
+            .main .block-container {
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+            }
+            .stExpander {
+                margin-bottom: 1rem;
+            }
+            .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
+                font-size: 1.5rem;
+                margin-top: 0.5rem;
+                margin-bottom: 0.5rem;
+            }
+        }
+        
+        /* Touch-friendly elements */
+        .stButton>button, .stSelectbox>div>div>select, .stTextInput>div>div>input {
+            touch-action: manipulation;
+        }
+        
+        /* Improved visibility */
+        .stAlert {
+            margin: 0.5rem 0;
+            padding: 0.75rem;
+        }
+        
+        /* Better spacing for mobile */
+        .element-container {
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Fix for mobile camera display */
+        .stImage img {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+        
+        /* Improve table readability on mobile */
+        .stDataFrame td, .stDataFrame th {
+            padding: 0.5rem;
+            white-space: nowrap;
         }
         </style>
     """, unsafe_allow_html=True)
@@ -130,8 +193,6 @@ def main():
     
     # Move settings to an expander for mobile
     with st.expander("Settings", expanded=False):
-        st.sidebar.title("Settings")
-        
         # Create output directory
         os.makedirs(output_dir, exist_ok=True)
         
@@ -168,18 +229,21 @@ def main():
                 st.success(f"Model uploaded successfully!")
         
         # Camera settings with mobile-friendly layout
+        st.subheader("Camera Settings")
         col1, col2 = st.columns(2)
         with col1:
             camera_id = st.number_input("Camera ID", min_value=0, max_value=10, value=0)
-            cam_width = st.number_input("Camera Width", min_value=320, max_value=4096, value=1280)
+            cam_width = st.number_input("Camera Width", min_value=320, max_value=1920, value=640)
         with col2:
-            cam_height = st.number_input("Camera Height", min_value=240, max_value=2160, value=720)
+            cam_height = st.number_input("Camera Height", min_value=240, max_value=1080, value=480)
             conf_threshold = st.slider("Confidence Threshold", min_value=0.1, max_value=1.0, value=0.5, step=0.05)
         
         # Gemini API key for OCR
+        st.subheader("OCR Settings")
         gemini_key = st.text_input("Gemini API Key (for OCR)", type="password")
         
         # Device selection
+        st.subheader("Performance Settings")
         device_options = ["CPU", "GPU"]
         device_selection = st.selectbox("Device", device_options, index=1)
         device = "cpu" if device_selection == "CPU" else "0"
@@ -235,13 +299,13 @@ def main():
                     )
                     thread.start()
                     st.session_state.detection_running = True
-                    st.experimental_rerun()
+                    st.rerun()
         else:
             if st.button("Stop Detection", use_container_width=True, key="stop_detection"):
                 # Stop webcam thread
                 stop_event.set()
                 st.session_state.detection_running = False
-                st.experimental_rerun()
+                st.rerun()
     
     with detection_col2:
         # Toggle plate saving with mobile-friendly layout
@@ -252,15 +316,15 @@ def main():
     st.markdown("""
         <style>
         .detection-history {
-            margin-top: 2rem;
-            padding: 1rem;
+            margin-top: 1rem;
+            padding: 0.5rem;
             border-radius: 0.5rem;
             background-color: rgba(0,0,0,0.05);
         }
         @media (max-width: 768px) {
             .detection-history {
-                margin-top: 1rem;
-                padding: 0.5rem;
+                margin-top: 0.5rem;
+                padding: 0.25rem;
             }
         }
         </style>
