@@ -191,20 +191,20 @@ def main():
     
     st.title("License Plate Detection System")
     
+    # Initialize session state variables
+    if 'detector' not in st.session_state:
+        st.session_state['detector'] = None
+    if 'detection_running' not in st.session_state:
+        st.session_state['detection_running'] = False
+    if 'save_plates' not in st.session_state:
+        st.session_state['save_plates'] = True
+    if 'detections' not in st.session_state:
+        st.session_state['detections'] = []
+    
     # Move settings to an expander for mobile
     with st.expander("Settings", expanded=False):
         # Create output directory
         os.makedirs(output_dir, exist_ok=True)
-        
-        # Initialize detector settings in session state if not exist
-        if 'detector' not in st.session_state:
-            st.session_state.detector = None
-        if 'detection_running' not in st.session_state:
-            st.session_state.detection_running = False
-        if 'save_plates' not in st.session_state:
-            st.session_state.save_plates = True
-        if 'detections' not in st.session_state:
-            st.session_state.detections = []
             
         # Model settings
         model_path = None
@@ -249,10 +249,10 @@ def main():
         device = "cpu" if device_selection == "CPU" else "0"
     
     # Initialize detector if model is available
-    if model_path and st.session_state.detector is None:
+    if model_path and st.session_state['detector'] is None:
         with st.spinner("Initializing detector..."):
             try:
-                st.session_state.detector = LicensePlateWebcamDetector(
+                st.session_state['detector'] = LicensePlateWebcamDetector(
                     model_path=model_path,
                     device=device,
                     conf_threshold=conf_threshold,
@@ -287,10 +287,10 @@ def main():
     # Start/Stop detection buttons with mobile-friendly layout
     detection_col1, detection_col2 = st.columns([1, 1])
     with detection_col1:
-        if not st.session_state.detection_running:
+        if not st.session_state['detection_running']:
             if st.button("Start Detection", use_container_width=True, key="start_detection"):
                 # Start webcam thread
-                if st.session_state.detector is not None:
+                if st.session_state['detector'] is not None:
                     stop_event.clear()
                     thread = threading.Thread(
                         target=webcam_thread,
@@ -298,19 +298,20 @@ def main():
                         daemon=True
                     )
                     thread.start()
-                    st.session_state.detection_running = True
+                    st.session_state['detection_running'] = True
                     st.rerun()
         else:
             if st.button("Stop Detection", use_container_width=True, key="stop_detection"):
                 # Stop webcam thread
                 stop_event.set()
-                st.session_state.detection_running = False
+                st.session_state['detection_running'] = False
                 st.rerun()
     
     with detection_col2:
         # Toggle plate saving with mobile-friendly layout
-        save_plates = st.checkbox("Save Detected Plates", value=st.session_state.save_plates, key="save_plates")
-        st.session_state.save_plates = save_plates
+        save_plates = st.checkbox("Save Detected Plates", value=st.session_state['save_plates'], key="save_plates")
+        if save_plates != st.session_state['save_plates']:
+            st.session_state['save_plates'] = save_plates
     
     # Detection history with mobile-friendly layout
     st.markdown("""
@@ -336,11 +337,11 @@ def main():
     st.markdown('</div>', unsafe_allow_html=True)
     
     # Process frames if detection is running
-    if st.session_state.detection_running and st.session_state.detector is not None:
+    if st.session_state['detection_running'] and st.session_state['detector'] is not None:
         fps_list = []  # Store recent FPS values
         
         # Main detection loop
-        while st.session_state.detection_running:
+        while st.session_state['detection_running']:
             try:
                 # Get frame from queue with timeout
                 try:
@@ -352,10 +353,10 @@ def main():
                 
                 # Process frame
                 start_time = time.time()
-                processed_frame, plate_info = st.session_state.detector.process_frame(
+                processed_frame, plate_info = st.session_state['detector'].process_frame(
                     frame,
                     use_ocr=True if gemini_key else False,
-                    save_plates=st.session_state.save_plates,
+                    save_plates=st.session_state['save_plates'],
                     output_dir=output_dir
                 )
                 
@@ -401,7 +402,7 @@ def main():
                 status_text.info(status)
                 
                 # Get detection history and display with mobile-friendly layout
-                detection_history = st.session_state.detector.get_detection_history()
+                detection_history = st.session_state['detector'].get_detection_history()
                 
                 if detection_history:
                     # Create DataFrame for display
@@ -426,7 +427,7 @@ def main():
                 continue
     
     # Display saved detections
-    if not st.session_state.detection_running:
+    if not st.session_state['detection_running']:
         st.subheader("Saved Detections")
         
         # Check for detected_plates directory and files
