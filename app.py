@@ -1,9 +1,8 @@
 import streamlit as st
-import cv2
+import sys
 import os
 import time
 import numpy as np
-import sys
 import pandas as pd
 from pathlib import Path
 from PIL import Image
@@ -14,6 +13,21 @@ import base64
 from datetime import datetime
 import tempfile
 
+# Try to import OpenCV with proper error handling
+try:
+    import cv2
+    OPENCV_AVAILABLE = True
+except ImportError:
+    OPENCV_AVAILABLE = False
+    st.error("""
+        OpenCV (cv2) is not properly installed. Please ensure you have installed the required dependencies:
+        ```
+        pip install -r requirements.txt
+        ```
+        If you're deploying to Streamlit Cloud, make sure to include opencv-python-headless in your requirements.txt file.
+    """)
+    st.stop()
+
 # Add parent directory to path to import our modules
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
@@ -21,7 +35,11 @@ if parent_dir not in sys.path:
     sys.path.append(parent_dir)
 sys.path.append(current_dir)  # Make sure utils can be imported from current dir
 
-from utils import LicensePlateWebcamDetector, init_webcam
+try:
+    from utils import LicensePlateWebcamDetector, init_webcam
+except ImportError as e:
+    st.error(f"Error importing required modules: {str(e)}")
+    st.stop()
 
 # Global variables
 frame_queue = queue.Queue(maxsize=2)  # Queue to hold frames
